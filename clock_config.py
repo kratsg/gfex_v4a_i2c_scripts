@@ -1,7 +1,9 @@
+#!/usr/bin/env python
 from __future__ import print_function
 from i2cdev import I2C
 from configurations import Si5345, frequencies
 from time import sleep
+import sys
 
 i2c = I2C(0x68, 0) # device @ 0x68, bus 0
 
@@ -27,8 +29,10 @@ do_i2c_block_write.page = 0x00
 def do_i2c_write(i2c, configurations):
   for block in batch(configurations, 3): do_i2c_block_write(i2c, block)
 
-
 frequency = None
+if len(sys.argv) >= 2 and sys.argv[1] == 'auto':
+  frequency = 'MixMHz'
+
 while frequency not in frequencies:
   frequency = raw_input(' or '.join(sorted(frequencies.keys())) + ': ')
 
