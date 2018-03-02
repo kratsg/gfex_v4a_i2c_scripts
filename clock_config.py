@@ -1,11 +1,9 @@
 from __future__ import print_function
 from i2cdev import I2C
-from configurations import *
+from configurations import Si5345, frequencies
 from time import sleep
 
 i2c = I2C(0x68, 0) # device @ 0x68, bus 0
-
-config = clock_config['120MHz']
 
 def batch(iterable, n=1):
   l = len(iterable)
@@ -30,13 +28,13 @@ def do_i2c_write(i2c, configurations):
   for block in batch(configurations, 3): do_i2c_block_write(i2c, block)
 
 print('Handling preamble')
-do_i2c_write(i2c, config['preamble'])
+do_i2c_write(i2c, Si5345['preamble'])
 sleep(0.3) # 300 ms delay
 print('Handling modifications')
-do_i2c_write(i2c, config['modifications'])
+do_i2c_write(i2c, frequencies['120MHz']['modifications'])
 print('Handling soft reset')
-do_i2c_write(i2c, config['soft reset'])
+do_i2c_write(i2c, Si5345['soft reset'])
 print('Handling postamble')
-do_i2c_write(i2c, config['postamble'])
+do_i2c_write(i2c, Si5345['postamble'])
 
 i2c.close()
