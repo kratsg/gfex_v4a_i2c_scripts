@@ -30,8 +30,8 @@ def do_i2c_write(i2c, configurations):
   for block in batch(configurations, 3): do_i2c_block_write(i2c, block)
 
 frequency = None
-if len(sys.argv) >= 2 and sys.argv[1] == 'auto':
-  frequency = 'MixMHz'
+if len(sys.argv) >= 2 and sys.argv[1] in frequencies.keys():
+  frequency = sys.argv[1]
 
 while frequency not in frequencies:
   frequency = raw_input(' or '.join(sorted(frequencies.keys())) + ': ')
