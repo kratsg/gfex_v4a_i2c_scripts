@@ -27,14 +27,19 @@ do_i2c_block_write.page = 0x00
 def do_i2c_write(i2c, configurations):
   for block in batch(configurations, 3): do_i2c_block_write(i2c, block)
 
+
+frequency = None
+while frequency not in frequencies:
+  frequency = raw_input(' or '.join(sorted(frequencies.keys())) + ': ')
+
 print('Handling preamble')
 do_i2c_write(i2c, Si5345['preamble'])
 sleep(0.3) # 300 ms delay
-print('Handling modifications')
-do_i2c_write(i2c, frequencies['120MHz']['modifications'])
+print('Handling modifications for {0:s}'.format(frequency))
+do_i2c_write(i2c, frequencies[frequency])
 print('Handling soft reset')
 do_i2c_write(i2c, Si5345['soft reset'])
 print('Handling postamble')
 do_i2c_write(i2c, Si5345['postamble'])
-
+print('{0:s} frequency was configured.'.format(frequency))
 i2c.close()
